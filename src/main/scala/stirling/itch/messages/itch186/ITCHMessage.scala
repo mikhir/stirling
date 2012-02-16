@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package stirling.itch.messages
+package stirling.itch.messages.itch186
 
 import java.nio.ByteBuffer
-import scala.annotation.tailrec
-import silvertip.GarbledMessageException
+import stirling.itch.messages.Message
+import stirling.itch.templates.ITCHTemplate
 
-object ITCHFileParser extends ITCHMessageParser {
-  override protected def decode(buffer: ByteBuffer) = {
-    @tailrec def skipCrlf: ITCHMessage = {
-      val messageTypeOrCr = decodeMessageType(buffer)
-      if (messageTypeOrCr != cr)
-        decodeMessage(buffer, messageTypeOrCr)
-      else {
-        if (buffer.get != lf)
-          throw new GarbledMessageException("Expected LF")
-        skipCrlf
-      }
-    }
-    skipCrlf
+case class ITCHMessage(template: ITCHTemplate) extends Message {
+  override def encode(buffer: ByteBuffer) {
+    super.encode(buffer)
+    template.encode(buffer, this)
   }
-  private val cr = '\r'
-  private val lf = '\n'.toByte
 }
