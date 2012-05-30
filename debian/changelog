@@ -1,0 +1,5 @@
+libstirling-java (1.1.6-1) unstable; urgency=low
+
+  * Debian packaging.
+
+ -- Pekka Enberg <penberg@iki.fi>  Wed, 30 May 2012 08:06:39 +0000
