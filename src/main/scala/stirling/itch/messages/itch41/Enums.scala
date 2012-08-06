@@ -18,132 +18,132 @@ package stirling.itch.messages.itch41
 /**
  * System Event Codes as specified in section 4.2.
  */
-object SystemMessageType extends Enumeration {
-  val StartOfMessages    = Value("O")
-  val StartOfSystemHours = Value("S")
-  val StartOfMarketHours = Value("Q")
-  val EndOfMarketHours   = Value("M")
-  val EndOfSystemHours   = Value("E")
-  val EndOfMessages      = Value("C")
-  val Halt               = Value("A")
-  val QuoteOnlyPeriod    = Value("R")
-  val Resumption         = Value("B")
+object SystemMessageType {
+  val StartOfMessages    = 'O'.toByte
+  val StartOfSystemHours = 'S'.toByte
+  val StartOfMarketHours = 'Q'.toByte
+  val EndOfMarketHours   = 'M'.toByte
+  val EndOfSystemHours   = 'E'.toByte
+  val EndOfMessages      = 'C'.toByte
+  val Halt               = 'A'.toByte
+  val QuoteOnlyPeriod    = 'R'.toByte
+  val Resumption         = 'B'.toByte
 }
 
 /**
  * Market Category as specified in section 4.3.1.
  */
-object MarketCategory extends Enumeration {
-  val Nyse                     = Value("N")
-  val NyseAmex                 = Value("A")
-  val NyseArca                 = Value("P")
-  val NasdaqGlobalSelectMarket = Value("Q")
-  val NasdaqGlobalMarkget      = Value("G")
-  val NasdaqCapitalMarket      = Value("S")
-  val BatsBzxExchange          = Value("Z")
+object MarketCategory {
+  val Nyse                     = 'N'.toByte
+  val NyseAmex                 = 'A'.toByte
+  val NyseArca                 = 'P'.toByte
+  val NasdaqGlobalSelectMarket = 'Q'.toByte
+  val NasdaqGlobalMarkget      = 'G'.toByte
+  val NasdaqCapitalMarket      = 'S'.toByte
+  val BatsBzxExchange          = 'Z'.toByte
 }
 
 /**
  * Financial Status Indicator as specified in section 4.3.1.
  */
-object FinancialStatusIndicator extends Enumeration {
-  val Deficient                   = Value("D")
-  val Delinquent                  = Value("E")
-  val Bankrupt                    = Value("Q")
-  val Suspended                   = Value("S")
-  val DeficientAndBankrupt        = Value("G")
-  val DeficientAndDeliquent       = Value("H")
-  val DelinquentAndBankrupt       = Value("J")
-  val DeficientDelinquentBankrupt = Value("K")
-  val NasdaqCompliant             = Value(" ")
+object FinancialStatusIndicator {
+  val Deficient                   = 'D'.toByte
+  val Delinquent                  = 'E'.toByte
+  val Bankrupt                    = 'Q'.toByte
+  val Suspended                   = 'S'.toByte
+  val DeficientAndBankrupt        = 'G'.toByte
+  val DeficientAndDeliquent       = 'H'.toByte
+  val DelinquentAndBankrupt       = 'J'.toByte
+  val DeficientDelinquentBankrupt = 'K'.toByte
+  val NasdaqCompliant             = ' '.toByte
 }
 
 /**
  * Trading State as specified in section 4.3.2.
  */
-object TradingState extends Enumeration {
-  val Halted          = Value("H")
-  val HaltedInNasdaq  = Value("V")
-  val Quotation       = Value("Q")
-  val QuotationNasdaq = Value("R")
-  val TradingOnNasdaq = Value("T")
+object TradingState {
+  val Halted          = 'H'.toByte
+  val HaltedInNasdaq  = 'V'.toByte
+  val Quotation       = 'Q'.toByte
+  val QuotationNasdaq = 'R'.toByte
+  val TradingOnNasdaq = 'T'.toByte
 }
 
 /**
  * Reg SHO Action as specified in section 4.3.3.
  */
-object RegSHOAction extends Enumeration {
-  val NoPriceTest                       = Value("0")
-  val PriceTestRemainsIntraDayPriceDrop = Value("1")
-  val PriceTestRemains                  = Value("2")
+object RegSHOAction {
+  val NoPriceTest                       = '0'.toByte
+  val PriceTestRemainsIntraDayPriceDrop = '1'.toByte
+  val PriceTestRemains                  = '2'.toByte
 }
 
 /**
  * Market Maker Mode as specified in section 4.3.4.
  */
-object MarketMakerMode extends Enumeration {
-  val Normal       = Value("N")
-  val Passive      = Value("P")
-  val Syndicate    = Value("S")
-  val PreSyndicate = Value("R")
-  val Penalty      = Value("L")
+object MarketMakerMode {
+  val Normal       = 'N'.toByte
+  val Passive      = 'P'.toByte
+  val Syndicate    = 'S'.toByte
+  val PreSyndicate = 'R'.toByte
+  val Penalty      = 'L'.toByte
 }
 
 /**
  * Market Participant State as specified in section 4.3.4.
  */
-object MarketParticipantState extends Enumeration {
-  val Active             = Value("A")
-  val ExcusedOrWithdrawn = Value("E")
-  val Withdrawn          = Value("W")
-  val Suspended          = Value("S")
-  val Deleted            = Value("D")
+object MarketParticipantState {
+  val Active             = 'A'.toByte
+  val ExcusedOrWithdrawn = 'E'.toByte
+  val Withdrawn          = 'W'.toByte
+  val Suspended          = 'S'.toByte
+  val Deleted            = 'D'.toByte
 }
 
 /**
  * Buy/Sell Indicator as specified in section 4.6.1.
  */
-object BuySellIndicator extends Enumeration {
-  val Buy  = Value("B")
-  val Sell = Value("S")
+object BuySellIndicator {
+  val Buy  = 'B'.toByte
+  val Sell = 'S'.toByte
 }
 
 /**
  * Imbalance Direction as specified in section 4.7.
  */
-object ImbalanceDirection extends Enumeration {
-  val Buy                           = Value("B")
-  val Sell                          = Value("S")
-  val NoImbalance                   = Value("N")
-  val InsufficientOrdersToCalculate = Value("O")
+object ImbalanceDirection {
+  val Buy                           = 'B'.toByte
+  val Sell                          = 'S'.toByte
+  val NoImbalance                   = 'N'.toByte
+  val InsufficientOrdersToCalculate = 'O'.toByte
 }
 
 /**
  * Cross Type as specified in section 4.7.
  */
-object CrossType extends Enumeration {
-  val NasdaqOpening              = Value("O")
-  val NasdaqClosing              = Value("C")
-  val IpoAndHaltedOrPaused       = Value("H")
-  val NasdaqIntradayAndPostClose = Value("I")
+object CrossType {
+  val NasdaqOpening              = 'O'.toByte
+  val NasdaqClosing              = 'C'.toByte
+  val IpoAndHaltedOrPaused       = 'H'.toByte
+  val NasdaqIntradayAndPostClose = 'I'.toByte
 }
 
 /**
  * Price Variance Indicator as specified in Section 4.7.
  */
-object PriceVarianceIndicator extends Enumeration {
-  val CannotBeCalculated              = Value(" ")
-  val LessThanOnePercent              = Value("L")
-  val LessThanTwoPercent              = Value("1")
-  val LessThanThreePercent            = Value("2")
-  val LessThanFourPercent             = Value("3")
-  val LessThanFivePercent             = Value("4")
-  val LessThanSixPercent              = Value("5")
-  val LessThanSevenPercent            = Value("6")
-  val LessThanEightPercent            = Value("7")
-  val LessThanNinePercent             = Value("8")
-  val LessThanTenPercent              = Value("9")
-  val LessThanTwentyPercent           = Value("A")
-  val LessThanThirtyPercent           = Value("B")
-  val EqualOrGreaterThanThirtyPercent = Value("C")
+object PriceVarianceIndicator {
+  val CannotBeCalculated              = ' '.toByte
+  val LessThanOnePercent              = 'L'.toByte
+  val LessThanTwoPercent              = '1'.toByte
+  val LessThanThreePercent            = '2'.toByte
+  val LessThanFourPercent             = '3'.toByte
+  val LessThanFivePercent             = '4'.toByte
+  val LessThanSixPercent              = '5'.toByte
+  val LessThanSevenPercent            = '6'.toByte
+  val LessThanEightPercent            = '7'.toByte
+  val LessThanNinePercent             = '8'.toByte
+  val LessThanTenPercent              = '9'.toByte
+  val LessThanTwentyPercent           = 'A'.toByte
+  val LessThanThirtyPercent           = 'B'.toByte
+  val EqualOrGreaterThanThirtyPercent = 'C'.toByte
 }

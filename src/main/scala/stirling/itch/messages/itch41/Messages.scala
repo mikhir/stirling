@@ -16,6 +16,7 @@
 package stirling.itch.messages.itch41
 
 import stirling.itch.common.Message
+import java.nio.ByteBuffer
 
 /**
  * Time Stamp - Seconds message as specified in section 4.1.
@@ -35,7 +36,7 @@ case class SystemEvent(
  */
 case class StockDirectory(
   nanoSeconds:              Int,
-  stock:                    String,
+  stock:                    ByteBuffer,
   marketCategory:           MarketCategory,
   financialStatusIndicator: FinancialStatusIndicator,
   roundLotSize:             Int,
@@ -47,18 +48,20 @@ case class StockDirectory(
  */
 case class StockTradingAction(
   nanoSeconds:  Int,
-  stock:        String,
+  stock:        ByteBuffer,
   tradingState: TradingState,
-  reserved:     String,
-  reason:       String
-) extends Message
+  reserved:     Byte,
+  reason:       ByteBuffer
+) extends Message {
+
+}
 
 /**
  * Reg SHO Short Sale Price Test Restriction Indicator message as specified in section 4.3.3.
  */
 case class RegSHOShortSalePriceTestRestrictedIndicator(
   nanoSeconds: Int,
-  stock:       String,
+  stock:       ByteBuffer,
   shoAction:   RegSHOAction
 ) extends Message
 
@@ -67,8 +70,8 @@ case class RegSHOShortSalePriceTestRestrictedIndicator(
  */
 case class MarketParticipantPosition(
   nanoSeconds: Int,
-  mpid:        String,
-  stock:       String,
+  mpid:        ByteBuffer,
+  stock:       ByteBuffer,
   isPrimary:   Boolean,
   mode:        MarketMakerMode,
   status:      MarketParticipantState
@@ -82,9 +85,9 @@ case class AddOrder(
   referenceNumber:  Long,
   buySellIndicator: BuySellIndicator,
   shares:           Int,
-  stock:            String,
+  stock:            ByteBuffer,
   price:            Int,
-  attribution:      Option[String] = None
+  attribution:      Option[ByteBuffer] = None
 ) extends Message
 
 /**
@@ -135,7 +138,7 @@ case class Trade(
   orderReferenceNumber: Long,
   buySellIndicator:     BuySellIndicator,
   shares:               Int,
-  stock:                String,
+  stock:                ByteBuffer,
   price:                Int,
   matchNumber:          Long
 ) extends Message
@@ -146,7 +149,7 @@ case class Trade(
 case class CrossTrade(
   nanoSeconds: Int,
   shares:      Long,
-  stock:       String,
+  stock:       ByteBuffer,
   crossPrice:  Int,
   matchNumber: Long,
   crossType:   CrossType
@@ -168,7 +171,7 @@ case class NetOrderImbalanceIndicator(
   pairedShares:           Long,
   imbalance:              Long,
   imbalanceDirection:     ImbalanceDirection,
-  stock:                  String,
+  stock:                  ByteBuffer,
   farPrice:               Int,
   nearPrice:              Int,
   currentReferencePrice:  Int,

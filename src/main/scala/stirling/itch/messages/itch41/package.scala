@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 package stirling.itch.messages
+import java.nio.ByteBuffer
 
 package object itch41 {
-  type SystemMessageType        = SystemMessageType.Value
-  type MarketCategory           = MarketCategory.Value
-  type FinancialStatusIndicator = FinancialStatusIndicator.Value
-  type TradingState             = TradingState.Value
-  type RegSHOAction             = RegSHOAction.Value
-  type MarketMakerMode          = MarketMakerMode.Value
-  type MarketParticipantState   = MarketParticipantState.Value
-  type BuySellIndicator         = BuySellIndicator.Value
-  type CrossType                = CrossType.Value
-  type ImbalanceDirection       = ImbalanceDirection.Value
-  type PriceVarianceIndicator   = PriceVarianceIndicator.Value
+  type SystemMessageType        = Byte
+  type MarketCategory           = Byte
+  type FinancialStatusIndicator = Byte
+  type TradingState             = Byte
+  type RegSHOAction             = Byte
+  type MarketMakerMode          = Byte
+  type MarketParticipantState   = Byte
+  type BuySellIndicator         = Byte
+  type CrossType                = Byte
+  type ImbalanceDirection       = Byte
+  type PriceVarianceIndicator   = Byte
 }

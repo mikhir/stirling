@@ -15,11 +15,11 @@
  */
 package stirling.itch.messages.itch41
 
-import silvertip.{GarbledMessageException, PartialMessageException}
 import java.nio.{ByteBuffer, BufferUnderflowException}
 import stirling.itch.common._
 import stirling.itch.types.Alpha
 import java.nio.charset.Charset
+import silvertip.{PartialMessageException, GarbledMessageException}
 
 class MessageParser extends ItchMessageParser {
 
@@ -34,7 +34,6 @@ class MessageParser extends ItchMessageParser {
   protected def charset = Charset.forName("US-ASCII")
 
   protected def decode(buffer: ByteBuffer) = {
-    buffer.getShort()
     decodeMessage(buffer, decodeMessageType(buffer))
   }
 
@@ -61,202 +60,168 @@ class MessageParser extends ItchMessageParser {
   }
 
   private def seconds(buf: ByteBuffer) = {
-    Seconds(buf.getInt)
+    Seconds(
+      seconds = buf.getInt
+    )
   }
 
   private def systemEvent(buf: ByteBuffer) = {
     SystemEvent(
-      nanoSeconds(buf),
-      systemMessageType(buf)
+      nanoSeconds       = buf.getInt,
+      systemMessageType = buf.get
     )
   }
 
   private def stockDirectory(buf: ByteBuffer) = {
     StockDirectory(
-      nanoSeconds(buf),
-      stock(buf),
-      marketCategory(buf),
-      financialStatusIndicator(buf),
-      roundLotSize(buf),
-      roundLotsOnly(buf)
+      nanoSeconds              = buf.getInt,
+      stock                    = readBytes8(buf),
+      marketCategory           = buf.get,
+      financialStatusIndicator = buf.get,
+      roundLotSize             = buf.getInt,
+      roundLotsOnly            = readChar(buf) == 'Y'
     )
   }
 
   private def stockTradingAction(buf: ByteBuffer) = {
     StockTradingAction(
-      nanoSeconds(buf),
-      stock(buf),
-      tradingState(buf),
-      reserved(buf),
-      reason(buf)
+      nanoSeconds  = buf.getInt,
+      stock        = readBytes8(buf),
+      tradingState = buf.get,
+      reserved     = buf.get,
+      reason       = readBytes4(buf)
     )
   }
 
   private def regSHOShortSalePriceTestRestrictedIndicator(buf: ByteBuffer) = {
     RegSHOShortSalePriceTestRestrictedIndicator(
-      nanoSeconds(buf),
-      stock(buf),
-      regSHOAction(buf)
+      nanoSeconds = buf.getInt,
+      stock       = readBytes8(buf),
+      shoAction   = buf.get
     )
   }
 
   private def marketParticipantPosition(buf: ByteBuffer) = {
     MarketParticipantPosition(
-      nanoSeconds(buf),
-      MPID(buf),
-      stock(buf),
-      primaryMarketMaker(buf),
-      marketMakerMode(buf),
-      marketParticipantState(buf)
+      nanoSeconds = buf.getInt,
+      mpid        = readBytes4(buf),
+      stock       = readBytes8(buf),
+      isPrimary   = readChar(buf) == 'Y',
+      mode        = buf.get,
+      status      = buf.get
     )
   }
 
   private def addOrder(buf: ByteBuffer) = {
     AddOrder(
-      nanoSeconds(buf),
-      referenceNumber(buf),
-      buySellIndicator(buf),
-      shares(buf),
-      stock(buf),
-      price(buf)
+      nanoSeconds      = buf.getInt,
+      referenceNumber  = buf.getLong,
+      buySellIndicator = buf.get,
+      shares           = buf.getInt,
+      stock            = readBytes8(buf),
+      price            = buf.getInt
     )
   }
 
   private def addOrderWithMPID(buf: ByteBuffer) = {
     AddOrder(
-      nanoSeconds(buf),
-      referenceNumber(buf),
-      buySellIndicator(buf),
-      shares(buf),
-      stock(buf),
-      price(buf),
-      Some(attribution(buf))
+      nanoSeconds      = buf.getInt,
+      referenceNumber  = buf.getLong,
+      buySellIndicator = buf.get,
+      shares           = buf.getInt,
+      stock            = readBytes8(buf),
+      price            = buf.getInt,
+      attribution      = Some(readBytes4(buf))
     )
   }
 
   private def orderExecuted(buf: ByteBuffer) = {
     OrderExecuted(
-      nanoSeconds(buf),
-      referenceNumber(buf),
-      executedShares(buf),
-      matchNumber(buf)
+      nanoSeconds     = buf.getInt,
+      referenceNumber = buf.getLong,
+      executedShares  = buf.getInt,
+      matchNumber     = buf.getLong
     )
   }
 
   private def orderExecutedWithPrice(buf: ByteBuffer) = {
     OrderExecuted(
-      nanoSeconds(buf),
-      referenceNumber(buf),
-      executedShares(buf),
-      matchNumber(buf),
-      Some(printable(buf)),
-      Some(price(buf))
+      nanoSeconds     = buf.getInt,
+      referenceNumber = buf.getLong,
+      executedShares  = buf.getInt,
+      matchNumber     = buf.getLong,
+      printable       = Some(buf.get == 'Y'),
+      price           = Some(buf.getInt)
     )
   }
 
   private def orderCancel(buf: ByteBuffer) = {
     OrderCancel(
-      nanoSeconds(buf),
-      referenceNumber(buf),
-      canceledShares(buf)
+      nanoSeconds     = buf.getInt,
+      referenceNumber = buf.getLong,
+      canceledShares  = buf.getInt
     )
   }
 
   private def orderDelete(buf: ByteBuffer) = {
     OrderDelete(
-      nanoSeconds(buf),
-      referenceNumber(buf)
+      nanoSeconds     = buf.getInt,
+      referenceNumber = buf.getLong
     )
   }
 
   private def orderReplace(buf: ByteBuffer) = {
     OrderReplace(
-      nanoSeconds(buf),
-      originalReferenceNumber(buf),
-      newReferenceNumber(buf),
-      shares(buf),
-      price(buf)
+      nanoSeconds             = buf.getInt,
+      originalReferenceNumber = buf.getLong,
+      newReferenceNumber      = buf.getLong,
+      shares                  = buf.getInt,
+      price                   = buf.getInt
     )
   }
 
   private def trade(buf: ByteBuffer) = {
     Trade(
-      nanoSeconds(buf),
-      orderReferenceNumber(buf),
-      buySellIndicator(buf),
-      shares(buf), stock(buf), price(buf),
-      matchNumber(buf)
+      nanoSeconds          = buf.getInt,
+      orderReferenceNumber = buf.getLong,
+      buySellIndicator     = buf.get,
+      shares               = buf.getInt,
+      stock                = readBytes8(buf),
+      price                = buf.getInt,
+      matchNumber          = buf.getLong
      )
   }
 
   private def crossTrade(buf: ByteBuffer) = {
     CrossTrade(
-      nanoSeconds(buf),
-      crossShares(buf),
-      stock(buf),
-      crossPrice(buf),
-      matchNumber(buf),
-      crossType(buf)
+      nanoSeconds = buf.getInt,
+      shares      = buf.getLong,
+      stock       = readBytes8(buf),
+      crossPrice  = buf.getInt,
+      matchNumber = buf.getLong,
+      crossType   = buf.get
     )
   }
 
   private def brokenTrade(buf: ByteBuffer) = {
     BrokenTrade(
-      nanoSeconds(buf),
-      matchNumber(buf)
+      nanoSeconds = buf.getInt,
+      matchNumber = buf.getLong
     )
   }
 
   private def netOrderImbalanceIndicator(buf: ByteBuffer) = {
     NetOrderImbalanceIndicator(
-      nanoSeconds(buf),
-      pairedShares(buf),
-      imbalance(buf),
-      imbalanceDirection(buf),
-      stock(buf),
-      farPrice(buf),
-      nearPrice(buf),
-      currentReferencePrice(buf),
-      crossType(buf),
-      priceVarianceIndicator(buf)
+      nanoSeconds            = buf.getInt,
+      pairedShares           = buf.getLong,
+      imbalance              = buf.getLong,
+      imbalanceDirection     = buf.get,
+      stock                  = readBytes8(buf),
+      farPrice               = buf.getInt,
+      nearPrice              = buf.getInt,
+      currentReferencePrice  = buf.getInt,
+      crossType              = buf.get,
+      priceVarianceIndicator = buf.get
     )
   }
-
-  private def systemMessageType(buf: ByteBuffer) = SystemMessageType.withName(readAlpha1(buf))
-  private def marketCategory(buf: ByteBuffer) = MarketCategory.withName(readAlpha1(buf))
-  private def financialStatusIndicator(buf: ByteBuffer) = FinancialStatusIndicator.withName(readAlpha1(buf))
-  private def roundLotSize(buf: ByteBuffer) = buf.getInt
-  private def roundLotsOnly(buf: ByteBuffer) = readAlpha1(buf) == "Y"
-  private def nanoSeconds(buf: ByteBuffer) = buf.getInt
-  private def stock(buf: ByteBuffer) = readAlpha8(buf)
-  private def tradingState(buf: ByteBuffer) = TradingState.withName(readAlpha1(buf))
-  private def reserved(buf: ByteBuffer) = readAlpha1(buf)
-  private def reason(buf: ByteBuffer) = readAlpha4(buf)
-  private def regSHOAction(buf: ByteBuffer) = RegSHOAction.withName(readAlpha1(buf))
-  private def MPID(buf: ByteBuffer) = readAlpha4(buf)
-  private def primaryMarketMaker(buf: ByteBuffer) = readAlpha1(buf) == "Y"
-  private def marketMakerMode(buf: ByteBuffer) = MarketMakerMode.withName(readAlpha1(buf))
-  private def marketParticipantState(buf: ByteBuffer) = MarketParticipantState.withName(readAlpha1(buf))
-  private def referenceNumber(buf: ByteBuffer) = buf.getLong
-  private def originalReferenceNumber(buf: ByteBuffer) = buf.getLong
-  private def newReferenceNumber(buf: ByteBuffer) = buf.getLong
-  private def shares(buf: ByteBuffer) = buf.getInt
-  private def crossShares(buf: ByteBuffer) = buf.getLong
-  private def price(buf: ByteBuffer) = buf.getInt
-  private def attribution(buf: ByteBuffer) = readAlpha4(buf)
-  private def executedShares(buf: ByteBuffer) = buf.getInt
-  private def matchNumber(buf: ByteBuffer) = buf.getLong
-  private def printable(buf: ByteBuffer) = readAlpha1(buf) == "Y"
-  private def canceledShares(buf: ByteBuffer) = buf.getInt
-  private def buySellIndicator(buf: ByteBuffer) = BuySellIndicator.withName(readAlpha1(buf))
-  private def crossPrice(buf: ByteBuffer) = buf.getInt
-  private def crossType(buf: ByteBuffer) = CrossType.withName(readAlpha1(buf))
-  private def pairedShares(buf: ByteBuffer) = buf.getLong
-  private def imbalance(buf: ByteBuffer) = buf.getLong
-  private def imbalanceDirection(buf: ByteBuffer) = ImbalanceDirection.withName(readAlpha1(buf))
-  private def nearPrice(buf: ByteBuffer) = buf.getInt
-  private def farPrice(buf: ByteBuffer) = buf.getInt
-  private def currentReferencePrice(buf: ByteBuffer) = buf.getInt
-  private def orderReferenceNumber(buf: ByteBuffer) = buf.getLong
-  private def priceVarianceIndicator(buf: ByteBuffer) = PriceVarianceIndicator.withName(readAlpha1(buf))
 }

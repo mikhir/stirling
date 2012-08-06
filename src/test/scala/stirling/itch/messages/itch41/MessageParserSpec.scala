@@ -4,11 +4,13 @@ import stirling.itch.Spec
 import stirling.itch.io.Source
 import java.io.File
 import stirling.itch.common._
+import java.nio.ByteBuffer
+import stirling.itch.messages.itch41
 
 class MessageParserSpec extends Spec with MessageParserFixtures {
   "MessageParser" must {
     "parse messages from binary file" in {
-      val source = Source.fromFile[Message](new File("src/test/resources/itch-v41.txt"), new MessageParser)
+      val source = Source.fromFile[Message](new File("src/test/resources/itch-v41.txt"), new FileMessageParser)
       expectedMessages must equal (source.toList)
     }
   }
@@ -28,7 +30,7 @@ trait MessageParserFixtures {
       ),
       StockDirectory(
         nanoSeconds              = 650506166,
-        stock                    = "QQQ     ",
+        stock                    = ItchMessageParser.toAsciiByteBuffer("QQQ     "),
         marketCategory           = MarketCategory.Nyse,
         financialStatusIndicator = FinancialStatusIndicator.NasdaqCompliant,
         roundLotSize             = 100,
@@ -36,22 +38,22 @@ trait MessageParserFixtures {
       ),
       MarketParticipantPosition(
         nanoSeconds            = 661054256,
-        mpid                   = "ABCD",
-        stock                  = "SPY     ",
+        mpid                   = ItchMessageParser.toAsciiByteBuffer("ABCD"),
+        stock                  = ItchMessageParser.toAsciiByteBuffer("SPY     "),
         isPrimary              = false,
         mode                   = MarketMakerMode.Normal,
-        marketParticipantState = MarketParticipantState.Active
+        status                 = MarketParticipantState.Active
       ),
       StockTradingAction(
         nanoSeconds  = 841159237,
-        stock        = "SPY     ",
+        stock        = ItchMessageParser.toAsciiByteBuffer("SPY     "),
         tradingState = TradingState.Halted,
-        reserved     = " ",
-        reason       = "IPO1"
+        reserved     = ' '.toByte,
+        reason       = ItchMessageParser.toAsciiByteBuffer("IPO1")
       ),
       RegSHOShortSalePriceTestRestrictedIndicator(
         nanoSeconds = 1412785731,
-        stock       = "SPY     ",
+        stock       = ItchMessageParser.toAsciiByteBuffer("SPY     "),
         shoAction   = RegSHOAction.NoPriceTest
       ),
       AddOrder(
@@ -59,7 +61,7 @@ trait MessageParserFixtures {
         referenceNumber  = 4096,
         buySellIndicator = BuySellIndicator.Buy,
         shares           = 1376271,
-        stock            = "SPY     ",
+        stock            = ItchMessageParser.toAsciiByteBuffer("SPY     "),
         price            = 65535
       ),
       AddOrder(
@@ -67,9 +69,9 @@ trait MessageParserFixtures {
         referenceNumber  = 4096,
         buySellIndicator = BuySellIndicator.Buy,
         shares           = 458767,
-        stock            = "QQQ     ",
+        stock            = ItchMessageParser.toAsciiByteBuffer("QQQ     "),
         price            = 65535,
-        attribution      = Some("ATTR")
+        attribution      = Some(ItchMessageParser.toAsciiByteBuffer("ATTR"))
       ),
       OrderExecuted(
         nanoSeconds     = 880306004,
@@ -105,14 +107,14 @@ trait MessageParserFixtures {
         orderReferenceNumber = 1L,
         buySellIndicator     = BuySellIndicator.Sell,
         shares               = 2,
-        stock                = "SPY     ",
+        stock                = ItchMessageParser.toAsciiByteBuffer("SPY     "),
         price                = 4521985,
         matchNumber          = 2L
       ),
       CrossTrade(
         nanoSeconds = 50529027,
         shares      = 2L,
-        stock       = "QQQ     ",
+        stock       = ItchMessageParser.toAsciiByteBuffer("QQQ     "),
         crossPrice  = 1179648,
         matchNumber = 2048,
         crossType   = CrossType.NasdaqClosing
@@ -126,7 +128,7 @@ trait MessageParserFixtures {
         pairedShares           = 258L,
         imbalance              = 259L,
         imbalanceDirection     = ImbalanceDirection.Buy,
-        stock                  = "QQQ     ",
+        stock                  = ItchMessageParser.toAsciiByteBuffer("QQQ     "),
         farPrice               = 1048577,
         nearPrice              = 1052672,
         currentReferencePrice  = 1048592,

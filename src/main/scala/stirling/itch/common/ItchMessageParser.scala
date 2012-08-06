@@ -7,16 +7,32 @@ import java.nio.charset.Charset
 abstract class ItchMessageParser extends MessageParser[Message] {
   protected def charset: Charset
 
-  protected val bytes1 = new Array[Byte](1)
   protected val bytes4 = new Array[Byte](4)
   protected val bytes8 = new Array[Byte](8)
 
-  protected def readAlpha(buffer: ByteBuffer, target: Array[Byte]): String = {
-    buffer.get(target)
-    new String(target, charset)
+  protected def readBytes(buf: ByteBuffer, target: Array[Byte]): ByteBuffer = {
+    val targetBuffer = ByteBuffer.allocate(target.length)
+    buf.get(target)
+    targetBuffer.put(target)
+    targetBuffer.flip()
+    targetBuffer
   }
 
-  protected def readAlpha1(buffer: ByteBuffer) = readAlpha(buffer, bytes1)
-  protected def readAlpha4(buffer: ByteBuffer) = readAlpha(buffer, bytes4)
-  protected def readAlpha8(buffer: ByteBuffer) = readAlpha(buffer, bytes8)
+  protected def readBytes4(buf: ByteBuffer): ByteBuffer = {
+    readBytes(buf, bytes4)
+  }
+
+  protected def readBytes8(buf: ByteBuffer): ByteBuffer = {
+    readBytes(buf, bytes8)
+  }
+
+  protected def readChar(buf: ByteBuffer): Char = {
+    buf.get.toChar
+  }
+}
+
+object ItchMessageParser {
+  def toAsciiByteBuffer(str: String): ByteBuffer = {
+    ByteBuffer.wrap(str.getBytes("US-ASCII"))
+  }
 }
