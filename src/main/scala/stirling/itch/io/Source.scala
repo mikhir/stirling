@@ -16,12 +16,12 @@
 package stirling.itch.io
 
 import java.io.{Closeable, File, FileInputStream, IOException}
-import java.nio.ByteBuffer
 import java.nio.channels.{Channels, ReadableByteChannel}
 import scala.collection.JavaConversions._
 import stirling.itch.messages.itch186.{FileParser, Message}
 import silvertip.{MessageParser, PartialMessageException}
 import java.util.zip.{GZIPInputStream, ZipFile}
+import java.nio.{ByteOrder, ByteBuffer}
 
 trait Source[T] extends Iterator[T] with Closeable
 
@@ -54,6 +54,8 @@ object Source {
 
   private class FileSource[T](channel: ReadableByteChannel, parser: MessageParser[T]) extends Source[T] {
     private val buffer = ByteBuffer.allocate(4096)
+    buffer.order(ByteOrder.BIG_ENDIAN)
+
     private val iterator = Iterator.continually(read).takeWhile(!_.isEmpty).map(_.get)
 
     def close() = channel.close()

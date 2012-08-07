@@ -1,8 +1,8 @@
 package stirling.itch.common
 
 import silvertip.MessageParser
-import java.nio.ByteBuffer
 import java.nio.charset.Charset
+import java.nio.{ByteOrder, ByteBuffer}
 
 abstract class ItchMessageParser extends MessageParser[Message] {
   protected def charset: Charset
@@ -12,6 +12,7 @@ abstract class ItchMessageParser extends MessageParser[Message] {
 
   protected def readBytes(buf: ByteBuffer, target: Array[Byte]): ByteBuffer = {
     val targetBuffer = ByteBuffer.allocate(target.length)
+    targetBuffer.order(ByteOrder.BIG_ENDIAN)
     buf.get(target)
     targetBuffer.put(target)
     targetBuffer.flip()
